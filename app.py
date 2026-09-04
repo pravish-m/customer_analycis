@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-
+import os
 
 # ---------------------------------------
 # PAGE CONFIGURATION
@@ -20,11 +20,21 @@ st.set_page_config(
 
 @st.cache_data
 def load_data():
-    data = pd.read_csv("output/customer_segments.csv")
-    return data
+    file_path = "output/customer_segments.csv"
+
+    if not os.path.exists(file_path):
+        return None
+
+    return pd.read_csv(file_path)
 
 
 df = load_data()
+
+
+if df is None:
+    st.error("❌ Customer data file not found!")
+    st.error("Missing: output/customer_segments.csv")
+    st.stop()
 
 
 # ---------------------------------------
